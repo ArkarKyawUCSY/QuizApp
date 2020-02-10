@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,24 +21,23 @@ public class MainActivity extends AppCompatActivity {
     private TextView mAnswer;
     private ProgressBar progressBar;
     private int mQuestionIndex = 0;
-    private int mQuizQuestion;
     private int mUserScore;
 
-    private QuizModel[] quizModelAry = new QuizModel[] {
+    private QuizModel[] questionCollection = new QuizModel[] {
 
         new QuizModel(R.string.q1,true),
-            new QuizModel(R.string.q2,true),
-            new QuizModel(R.string.q3,false),
-            new QuizModel(R.string.q4, true),
-            new QuizModel(R.string.q5, false),
-            new QuizModel(R.string.q6, true),
-            new QuizModel(R.string.q7, false),
-            new QuizModel(R.string.q8, true),
-            new QuizModel(R.string.q9, false),
-            new QuizModel(R.string.q10, true),
+            new QuizModel(R.string.q2,false),
+            new QuizModel(R.string.q3,true),
+            new QuizModel(R.string.q4, false),
+            new QuizModel(R.string.q5, true),
+            new QuizModel(R.string.q6, false),
+            new QuizModel(R.string.q7, true),
+            new QuizModel(R.string.q8, false),
+            new QuizModel(R.string.q9, true),
+            new QuizModel(R.string.q10, false),
     };
 
-    final int USER_PROGRESS = (int) Math.ceil(100 / quizModelAry.length);
+    final int USER_PROGRESS = (int) Math.ceil(100 / questionCollection.length);
     private String TAG = "MainPage";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Data Exists!!");
             mUserScore = savedInstanceState.getInt(SCORE_KEY);
             mQuestionIndex = savedInstanceState.getInt(INDEX_KEY);
-            mAnswer.setText(mUserScore + "");
-            QuizModel q1 = quizModelAry[mQuestionIndex];
+            mAnswer.setText(mUserScore);
+            QuizModel q1 = questionCollection[mQuestionIndex];
             mQuestion.setText(q1.getmQuestion());
             Log.i(TAG, "Data Exists!! mUserScore " + mUserScore);
             Log.i(TAG, "Data Exists!! mQuestionIndex " + mQuestionIndex);
@@ -63,21 +63,22 @@ public class MainActivity extends AppCompatActivity {
         Button btnTrue = findViewById(R.id.btnTrue);
         Button btnFalse = findViewById(R.id.btnFalse);
         progressBar = findViewById(R.id.quizPB);
-        QuizModel q1 = quizModelAry[mQuestionIndex];
+        QuizModel q1 = questionCollection[mQuestionIndex];
         mQuestion.setText(q1.getmQuestion());
-
+        mAnswer.setText(mUserScore);
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
                     case R.id.btnTrue:
-                        changeQuestion();
                         evaluateUserAnswer(true);
+                        changeQuestion();
+
                         break;
                     case R.id.btnFalse:
-                        changeQuestion();
                         evaluateUserAnswer(false);
+                        changeQuestion();
                         break;
                     default:
                         break;
@@ -92,25 +93,26 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MainActivity","AAA "+ mQuestionIndex);
 
         if (mQuestionIndex == 0) {
-            AlertDialog.Builder alertBuild = new AlertDialog.Builder(this);
-            alertBuild.setTitle("The quiz is  Complete!!!");
-            alertBuild.setCancelable(false);
-            alertBuild.setMessage("Your Score is " + mUserScore);
-            alertBuild.setPositiveButton("Finish the Quizz", new DialogInterface.OnClickListener() {
+            AlertDialog.Builder quizAlert = new AlertDialog.Builder(this);
+            quizAlert.setTitle("The quiz is  Complete!!!");
+            quizAlert.setCancelable(false);
+            quizAlert.setMessage("Your Score is " + mUserScore);
+            quizAlert.setPositiveButton("Finish the Quiz", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     finish();
                 }
             });
-            alertBuild.show();
+            quizAlert.show();
         }
-        mQuizQuestion = quizModelAry[mQuestionIndex].getmQuestion();
+        int mQuizQuestion = questionCollection[mQuestionIndex].getmQuestion();
         mQuestion.setText(mQuizQuestion);
         progressBar.incrementProgressBy(USER_PROGRESS);
-        mAnswer.setText(mUserScore + "");
+        mAnswer.setText(mUserScore);
+
     }
     private void evaluateUserAnswer(boolean userGuess) {
-        boolean currentQuestionAnswer = quizModelAry[mQuestionIndex].getmAnswer();
+        boolean currentQuestionAnswer = questionCollection[mQuestionIndex].getmAnswer();
         if(currentQuestionAnswer == userGuess) {
             Toast.makeText(this, R.string.correct_text, Toast.LENGTH_SHORT).show();
             mUserScore = mUserScore + 1;
@@ -123,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(SCORE_KEY, mUserScore);
         outState.putInt(INDEX_KEY, mQuestionIndex);
