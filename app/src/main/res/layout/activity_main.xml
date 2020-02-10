@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="TextView"
         android:textSize="18sp" />
 
     <ProgressBar
@@ -24,12 +23,11 @@
         android:layout_weight="1" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/txtAnswer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="TextView"
         android:textSize="18sp" />
 
     <Button
