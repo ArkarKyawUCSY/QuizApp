@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.quizPB);
         QuizModel q1 = questionCollection[mQuestionIndex];
         mQuestion.setText(q1.getmQuestion());
-        mAnswer.setText(mUserScore);
+        mAnswer.setText(mUserScore + "");
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         int mQuizQuestion = questionCollection[mQuestionIndex].getmQuestion();
         mQuestion.setText(mQuizQuestion);
         progressBar.incrementProgressBy(USER_PROGRESS);
-        mAnswer.setText(mUserScore);
+        mAnswer.setText(mUserScore + "");
 
     }
     private void evaluateUserAnswer(boolean userGuess) {
